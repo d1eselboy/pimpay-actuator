@@ -1,0 +1,675 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="urn:PlatformApiWsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="PlatformApi" targetNamespace="urn:PlatformApiWsdl">
+    <wsdl:documentation>
+        Service: PlatformApi Version: v2_6 Owner: LLC PIM Information: http://platform.api.pimpay.ru/
+    </wsdl:documentation>
+    <wsdl:types>
+        <xsd:schema targetNamespace="urn:PlatformApiWsdl">
+            <xsd:simpleType name="tinType">
+                <xsd:restriction base="xsd:string">
+                    <xsd:pattern value="[0-9]{10,12}"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="mobileType">
+                <xsd:restriction base="xsd:string">
+                    <xsd:pattern value="\+\d{11}"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="uniformPimpayDeliveryStatusType">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="pending"/>
+                    <xsd:enumeration value="prepared"/>
+                    <xsd:enumeration value="intransit"/>
+                    <xsd:enumeration value="stored"/>
+                    <xsd:enumeration value="delivered"/>
+                    <xsd:enumeration value="partialReturn"/>
+                    <xsd:enumeration value="return"/>
+                    <xsd:enumeration value="lost"/>
+                    <xsd:enumeration value="error"/>
+                    <xsd:enumeration value="unknown"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="russianPostIdType">
+                <xsd:restriction base="xsd:string">
+                    <xsd:pattern value="([A-Z]{2}\d{9}[A-Z]{2})|(\d{14})"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="currencyType">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="RUB"/>
+                    <xsd:enumeration value="KZT"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="moneyRecipientType">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="delivery_service"/>
+                    <xsd:enumeration value="client"/>
+                    <xsd:enumeration value="pimpay"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="deliveryServiceType">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="logibox"/>
+                    <xsd:enumeration value="pek"/>
+                    <xsd:enumeration value="axiomus"/>
+                    <xsd:enumeration value="b2cpl"/>
+                    <xsd:enumeration value="boxberry"/>
+                    <xsd:enumeration value="cse"/>
+                    <xsd:enumeration value="dpd"/>
+                    <xsd:enumeration value="ems"/>
+                    <xsd:enumeration value="im_logistics"/>
+                    <xsd:enumeration value="maxima_express"/>
+                    <xsd:enumeration value="pick_point"/>
+                    <xsd:enumeration value="pony"/>
+                    <xsd:enumeration value="post"/>
+                    <xsd:enumeration value="qiwi_post"/>
+                    <xsd:enumeration value="sdek"/>
+                    <xsd:enumeration value="beta"/>
+                    <xsd:enumeration value="spsr"/>
+                    <xsd:enumeration value="accord_post"/>
+                    <xsd:enumeration value="beta_post"/>
+                    <xsd:enumeration value="top_delivery"/>
+                    <xsd:enumeration value="maxi_post"/>
+                    <xsd:enumeration value="reworker"/>
+                    <xsd:enumeration value="shop_logistics"/>
+                    <xsd:enumeration value="hermes"/>
+                    <xsd:enumeration value="lenod"/>
+                    <xsd:enumeration value="aplix"/>
+                    <xsd:enumeration value="kit"/>
+                    <xsd:enumeration value="fsd"/>
+                    <xsd:enumeration value="great_express"/>
+                    <xsd:enumeration value="vestovoy"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="verificationStatusType">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="pending"/>
+                    <xsd:enumeration value="matched"/>
+                    <xsd:enumeration value="discarded"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:complexType name="AcceptClientParams">
+                <xsd:all>
+                    <xsd:element name="legalEntityName" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="tin" type="tns:tinType" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="shopName" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="email" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="mobile" type="tns:mobileType" minOccurs="1" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="ClientInfo">
+                <xsd:all>
+                    <xsd:element name="tin" type="tns:tinType" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="status" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="isMoneyTransferPossible" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="paymentOrderPurpose" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="ordersCount" type="xsd:integer" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="OrdersStates">
+                <xsd:sequence>
+                    <xsd:element name="OrderState" type="tns:OrderState" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="OrderState">
+                <xsd:all>
+                    <xsd:element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="cost" type="xsd:float" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="uniformPimpayDeliveryStatus" type="tns:uniformPimpayDeliveryStatusType" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="customDeliveryStatus" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="deliveryServiceDeliveryStatus" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="time" type="xsd:dateTime" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="Orders">
+                <xsd:sequence>
+                    <xsd:element name="Order" type="tns:Order" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="Order">
+                <xsd:all>
+                    <xsd:element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="tin" type="tns:tinType" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="shopExternalId" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="base" type="tns:OrderBase" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="createdAt" type="xsd:dateTime" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="destinationAddress" type="tns:Address" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="recipient" type="tns:Recipient" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="items" type="tns:OrderItems" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="f103" type="tns:F103" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="moneyRecipient" type="tns:moneyRecipientType" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="claim" type="tns:Claim" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="OrderBase">
+                <xsd:sequence>
+                    <xsd:element name="postId" type="tns:russianPostIdType" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="params" type="tns:OrderParams" minOccurs="0" maxOccurs="1"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="OrderParams">
+                <xsd:all>
+                    <xsd:element name="currency" type="tns:currencyType" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="paymentFromRecipient" type="xsd:float" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="declaredOrderCost" type="xsd:float" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="estimatedDeliveryCost" type="xsd:float" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="deliveryService" type="tns:deliveryServiceType" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="deliveryServiceExternalId" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="uniformPimpayDeliveryStatus" type="tns:uniformPimpayDeliveryStatusType" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="customDeliveryStatus" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="deliveryServiceDeliveryStatus" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="history" type="tns:DeliveryStatusHistoryItems" minOccurs="1" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="Address">
+                <xsd:all>
+                    <xsd:element name="full" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="zipcode" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="city" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="kladr" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="fias" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="Recipient">
+                <xsd:all>
+                    <xsd:element name="fio" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="phone" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="email" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="OrderItems">
+                <xsd:sequence>
+                    <xsd:element name="OrderItem" type="tns:OrderItem" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="OrderItem">
+                <xsd:all>
+                    <xsd:element name="name" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="value" type="xsd:float" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="count" type="xsd:integer" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="weight" type="xsd:float" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="category" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="F103">
+                <xsd:all>
+                    <xsd:element name="number" type="xsd:integer" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="date" type="xsd:date" minOccurs="1" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="Claim">
+                <xsd:all>
+                    <xsd:element name="termType" type="tns:ClaimTermType" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="paymentSum" type="xsd:float" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="paymentDate" type="xsd:date" minOccurs="0" maxOccurs="1"/>
+                    <xsd:element name="tin" type="tns:tinType" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="DeliveryStatusHistoryItems">
+                <xsd:sequence>
+                    <xsd:element name="DeliveryStatusHistoryItem" type="tns:DeliveryStatusHistoryItem" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="DeliveryStatusHistoryItem">
+                <xsd:all>
+                    <xsd:element name="time" type="xsd:dateTime" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="uniformPimpayDeliveryStatus" type="tns:uniformPimpayDeliveryStatusType" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="customDeliveryStatus" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="deliveryServiceDeliveryStatus" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="UpsertResultResponse">
+                <xsd:all>
+                    <xsd:element name="count" type="xsd:integer" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="orders" type="tns:UpsertResultItems" minOccurs="1" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="UpsertResultItems">
+                <xsd:sequence>
+                    <xsd:element name="UpsertResultItem" type="tns:UpsertResultItem" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="UpsertResultItem">
+                <xsd:all>
+                    <xsd:element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="status" type="tns:UpsertResultStatus" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="errorMessage" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:simpleType name="UpsertResultStatus">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="ok"/>
+                    <xsd:enumeration value="error"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="ClaimTermType">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="reg"/>
+                    <xsd:enumeration value="fed"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:complexType name="UpdateStateResultResponse">
+                <xsd:all>
+                    <xsd:element name="count" type="xsd:integer" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="orders" type="tns:UpdateStateResultItems" minOccurs="1" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="UpdateStateResultItems">
+                <xsd:sequence>
+                    <xsd:element name="UpdateStateResultItem" type="tns:UpdateStateResultItem" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="UpdateStateResultItem">
+                <xsd:all>
+                    <xsd:element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="status" type="tns:UpdateStateResultStatus" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="errorMessage" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:simpleType name="UpdateStateResultStatus">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="ok"/>
+                    <xsd:enumeration value="error"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:complexType name="PaymentOrder">
+                <xsd:all>
+                    <xsd:element name="num" type="xsd:integer" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="date" type="xsd:date" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="sum" type="xsd:float" minOccurs="1" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="VerificationRows">
+                <xsd:sequence>
+                    <xsd:element name="VerificationRow" type="tns:VerificationRow" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="VerificationRow">
+                <xsd:sequence>
+                    <xsd:element name="txs" type="tns:CustomTransactions" minOccurs="0" maxOccurs="1"/>
+                </xsd:sequence>
+                <xsd:attribute name="oid" type="xsd:string" use="required"/>
+                <xsd:attribute name="ptp" type="xsd:float" use="required"/>
+                <xsd:attribute name="pfr" type="xsd:float"/>
+                <xsd:attribute name="dc" type="xsd:float"/>
+                <xsd:attribute name="cs" type="xsd:float"/>
+                <xsd:attribute name="ins" type="xsd:float"/>
+            </xsd:complexType>
+            <xsd:complexType name="CustomTransactions">
+                <xsd:sequence>
+                    <xsd:element name="CustomTransaction" type="tns:CustomTransaction" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="CustomTransaction">
+                <xsd:all></xsd:all>
+                <xsd:attribute name="val" type="xsd:float" use="required"/>
+                <xsd:attribute name="cmt" type="xsd:string" use="required"/>
+            </xsd:complexType>
+            <xsd:complexType name="VerificationStatusResponse">
+                <xsd:all>
+                    <xsd:element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="status" type="tns:verificationStatusType" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="errors" type="tns:VerificationErrors" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="VerificationErrors">
+                <xsd:sequence>
+                    <xsd:element name="VerificationError" type="tns:VerificationError" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="VerificationError">
+                <xsd:all>
+                    <xsd:element name="message" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="RussianPostPaymentsResponse">
+                <xsd:all>
+                    <xsd:element name="tin" type="tns:tinType" minOccurs="1"/>
+                    <xsd:element name="russianPostPaymentsInfo" type="tns:RussianPostPaymentsInfo" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="RussianPostClaimAnswersResponse">
+                <xsd:all>
+                    <xsd:element name="tin" type="tns:tinType" minOccurs="1"/>
+                    <xsd:element name="russianPostClaimAnswersInfo" type="tns:RussianPostClaimAnswersInfo" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="RussianPostPaymentsInfo">
+                <xsd:sequence>
+                    <xsd:element name="RussianPostPaymentInfo" type="tns:RussianPostPaymentInfo" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="RussianPostPaymentInfo">
+                <xsd:all>
+                    <xsd:element name="id" type="xsd:string"/>
+                    <xsd:element name="postId" type="tns:russianPostIdType" minOccurs="1"/>
+                    <xsd:element name="payments" type="tns:RussianPostPayments" minOccurs="0" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="RussianPostClaimAnswersInfo">
+                <xsd:sequence>
+                    <xsd:element name="RussianPostClaimAnswerInfo" type="tns:RussianPostClaimAnswerInfo" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="RussianPostClaimAnswerInfo">
+                <xsd:all>
+                    <xsd:element name="id" type="xsd:string" minOccurs="0"/>
+                    <xsd:element name="postId" type="tns:russianPostIdType" minOccurs="1"/>
+                    <xsd:element name="isFound" type="xsd:boolean" minOccurs="1"/>
+                    <xsd:element name="inClaim" type="xsd:boolean" minOccurs="1"/>
+                    <xsd:element name="details" type="tns:Details"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="RussianPostPayments">
+                <xsd:sequence>
+                    <xsd:element name="RussianPostPayment" type="tns:RussianPostPayment" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="Details">
+                <xsd:sequence>
+                    <xsd:element name="KeyValuePair" type="tns:KeyValuePair" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="RussianPostPayment">
+                <xsd:all>
+                    <xsd:element name="sum" type="xsd:float"/>
+                    <xsd:element name="paymentDate" type="xsd:dateTime" minOccurs="1" maxOccurs="1"/>
+                    <xsd:element name="registeredAt" type="xsd:dateTime" minOccurs="1" maxOccurs="1"/>
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="PostIds">
+                <xsd:sequence>
+                    <xsd:element name="russianPostIdType" type="tns:russianPostIdType" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="KeyValuePair">
+                <xsd:all>
+                    <xsd:element name="key" type="xsd:string"/>
+                    <xsd:element name="value" type="xsd:string"/>
+                </xsd:all>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="acceptClientRequest">
+        <wsdl:part name="token" type="xsd:string"/>
+        <wsdl:part name="client" type="tns:AcceptClientParams"/>
+    </wsdl:message>
+    <wsdl:message name="acceptClientResponse">
+        <wsdl:part name="clientInfo" type="tns:ClientInfo"/>
+    </wsdl:message>
+    <wsdl:message name="getClientRequest">
+        <wsdl:part name="token" type="xsd:string"/>
+        <wsdl:part name="tin" type="xsd:string"/>
+    </wsdl:message>
+    <wsdl:message name="getClientResponse">
+        <wsdl:part name="clientInfo" type="tns:ClientInfo"/>
+    </wsdl:message>
+    <wsdl:message name="upsertOrdersRequest">
+        <wsdl:part name="token" type="xsd:string"/>
+        <wsdl:part name="orders" type="tns:Orders"/>
+    </wsdl:message>
+    <wsdl:message name="upsertOrdersResponse">
+        <wsdl:part name="result" type="tns:UpsertResultResponse"/>
+    </wsdl:message>
+    <wsdl:message name="upsertHistoricalOrdersRequest">
+        <wsdl:part name="token" type="xsd:string"/>
+        <wsdl:part name="orders" type="tns:Orders"/>
+    </wsdl:message>
+    <wsdl:message name="upsertHistoricalOrdersResponse">
+        <wsdl:part name="result" type="tns:UpsertResultResponse"/>
+    </wsdl:message>
+    <wsdl:message name="updateStateForOrdersRequest">
+        <wsdl:part name="token" type="xsd:string"/>
+        <wsdl:part name="ordersStates" type="tns:OrdersStates"/>
+    </wsdl:message>
+    <wsdl:message name="updateStateForOrdersResponse">
+        <wsdl:part name="result" type="tns:UpdateStateResultResponse"/>
+    </wsdl:message>
+    <wsdl:message name="sendVerificationRequest">
+        <wsdl:part name="token" type="xsd:string"/>
+        <wsdl:part name="tin" type="xsd:string"/>
+        <wsdl:part name="id" type="xsd:string"/>
+        <wsdl:part name="paymentOrder" type="tns:PaymentOrder"/>
+        <wsdl:part name="rows" type="tns:VerificationRows"/>
+    </wsdl:message>
+    <wsdl:message name="sendVerificationResponse">
+        <wsdl:part name="result" type="xsd:boolean"/>
+    </wsdl:message>
+    <wsdl:message name="getVerificationStatusRequest">
+        <wsdl:part name="token" type="xsd:string"/>
+        <wsdl:part name="id" type="xsd:string"/>
+    </wsdl:message>
+    <wsdl:message name="getVerificationStatusResponse">
+        <wsdl:part name="result" type="tns:VerificationStatusResponse"/>
+    </wsdl:message>
+    <wsdl:message name="testHeaderSignatureRequest">
+        <wsdl:part name="token" type="xsd:string"/>
+    </wsdl:message>
+    <wsdl:message name="testHeaderSignatureResponse">
+        <wsdl:part name="isVerified" type="xsd:boolean"/>
+    </wsdl:message>
+    <wsdl:message name="invokeUsingContainerRequest">
+        <wsdl:part name="token" type="xsd:string"/>
+        <wsdl:part name="requestContainer" type="xsd:string"/>
+        <wsdl:part name="requestSignature" type="xsd:string"/>
+    </wsdl:message>
+    <wsdl:message name="invokeUsingContainerResponse">
+        <wsdl:part name="responseContainer" type="xsd:string"/>
+    </wsdl:message>
+    <wsdl:message name="testContainerSignatureRequest">
+        <wsdl:part name="token" type="xsd:string"/>
+        <wsdl:part name="container" type="xsd:string"/>
+        <wsdl:part name="signature" type="xsd:string"/>
+    </wsdl:message>
+    <wsdl:message name="testContainerSignatureResponse">
+        <wsdl:part name="isVerified" type="xsd:boolean"/>
+    </wsdl:message>
+    <wsdl:message name="getRussianPostPaymentsRequest">
+        <wsdl:part name="token" type="xsd:string"/>
+        <wsdl:part name="tin" type="tns:tinType"/>
+        <wsdl:part name="postIds" type="tns:PostIds"/>
+    </wsdl:message>
+    <wsdl:message name="getRussianPostPaymentsResponse">
+        <wsdl:part name="result" type="tns:RussianPostPaymentsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getRussianPostClaimAnswersRequest">
+        <wsdl:part name="token" type="xsd:string"/>
+        <wsdl:part name="tin" type="tns:tinType"/>
+        <wsdl:part name="postIds" type="tns:PostIds"/>
+    </wsdl:message>
+    <wsdl:message name="getRussianPostClaimAnswersResponse">
+        <wsdl:part name="result" type="tns:RussianPostClaimAnswersResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="PlatformApiPortType">
+        <wsdl:documentation>Все метод PimPay API для служб доставок</wsdl:documentation>
+        <wsdl:operation name="acceptClient">
+            <wsdl:documentation>Отправить информацию о клиенте в PimPay</wsdl:documentation>
+            <wsdl:input message="tns:acceptClientRequest"/>
+            <wsdl:output message="tns:acceptClientResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getClient">
+            <wsdl:documentation>Получить статус клиента</wsdl:documentation>
+            <wsdl:input message="tns:getClientRequest"/>
+            <wsdl:output message="tns:getClientResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="upsertOrders">
+            <wsdl:documentation>Добавить/обновить информацию по заказам</wsdl:documentation>
+            <wsdl:input message="tns:upsertOrdersRequest"/>
+            <wsdl:output message="tns:upsertOrdersResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="upsertHistoricalOrders">
+            <wsdl:documentation>
+                Добавить/обновить информацию по историческим заказам
+            </wsdl:documentation>
+            <wsdl:input message="tns:upsertHistoricalOrdersRequest"/>
+            <wsdl:output message="tns:upsertHistoricalOrdersResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateStateForOrders">
+            <wsdl:documentation>
+                Обновить часто меняющуюся информацию по заказам (статус/стоимость)
+            </wsdl:documentation>
+            <wsdl:input message="tns:updateStateForOrdersRequest"/>
+            <wsdl:output message="tns:updateStateForOrdersResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="sendVerification">
+            <wsdl:documentation>Отправить сверку</wsdl:documentation>
+            <wsdl:input message="tns:sendVerificationRequest"/>
+            <wsdl:output message="tns:sendVerificationResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getVerificationStatus">
+            <wsdl:documentation>Получить статус переданной сверки</wsdl:documentation>
+            <wsdl:input message="tns:getVerificationStatusRequest"/>
+            <wsdl:output message="tns:getVerificationStatusResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="testHeaderSignature">
+            <wsdl:documentation>
+                Метод для проверки подписи, посылаемое в SOAP-заголовке
+            </wsdl:documentation>
+            <wsdl:input message="tns:testHeaderSignatureRequest"/>
+            <wsdl:output message="tns:testHeaderSignatureResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="invokeUsingContainer">
+            <wsdl:documentation>
+                Метод для обращению к сервису через base64-контейнер, для упрощенной работы с подписью
+            </wsdl:documentation>
+            <wsdl:input message="tns:invokeUsingContainerRequest"/>
+            <wsdl:output message="tns:invokeUsingContainerResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="testContainerSignature">
+            <wsdl:documentation>
+                Метод для проверки подписи, посылаем через контейнер
+            </wsdl:documentation>
+            <wsdl:input message="tns:testContainerSignatureRequest"/>
+            <wsdl:output message="tns:testContainerSignatureResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getRussianPostPayments">
+            <wsdl:documentation>
+                Получить информацию о платежах от Почты России по клиенту
+            </wsdl:documentation>
+            <wsdl:input message="tns:getRussianPostPaymentsRequest"/>
+            <wsdl:output message="tns:getRussianPostPaymentsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getRussianPostClaimAnswers">
+            <wsdl:documentation>
+                Получить информацию об ответах по претензиям от Почты России по номерам ШПИ
+            </wsdl:documentation>
+            <wsdl:input message="tns:getRussianPostClaimAnswersRequest"/>
+            <wsdl:output message="tns:getRussianPostClaimAnswersResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="PlatformApiBinding" type="tns:PlatformApiPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="acceptClient">
+            <soap:operation soapAction="urn:PlatformApiWsdl#acceptClient" style="rpc"/>
+            <wsdl:input>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getClient">
+            <soap:operation soapAction="urn:PlatformApiWsdl#getClient" style="rpc"/>
+            <wsdl:input>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="upsertOrders">
+            <soap:operation soapAction="urn:PlatformApiWsdl#upsertOrders" style="rpc"/>
+            <wsdl:input>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="upsertHistoricalOrders">
+            <soap:operation soapAction="urn:PlatformApiWsdl#upsertHistoricalOrders" style="rpc"/>
+            <wsdl:input>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateStateForOrders">
+            <soap:operation soapAction="urn:PlatformApiWsdl#updateStateForOrders" style="rpc"/>
+            <wsdl:input>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="sendVerification">
+            <soap:operation soapAction="urn:PlatformApiWsdl#sendVerification" style="rpc"/>
+            <wsdl:input>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getVerificationStatus">
+            <soap:operation soapAction="urn:PlatformApiWsdl#getVerificationStatus" style="rpc"/>
+            <wsdl:input>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="testHeaderSignature">
+            <soap:operation soapAction="urn:PlatformApiWsdl#testHeaderSignature" style="rpc"/>
+            <wsdl:input>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="invokeUsingContainer">
+            <soap:operation soapAction="urn:PlatformApiWsdl#invokeUsingContainer" style="rpc"/>
+            <wsdl:input>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="testContainerSignature">
+            <soap:operation soapAction="urn:PlatformApiWsdl#testContainerSignature" style="rpc"/>
+            <wsdl:input>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getRussianPostPayments">
+            <soap:operation soapAction="urn:PlatformApiWsdl#getRussianPostPayments" style="rpc"/>
+            <wsdl:input>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getRussianPostClaimAnswers">
+            <soap:operation soapAction="urn:PlatformApiWsdl#getRussianPostClaimAnswers" style="rpc"/>
+            <wsdl:input>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" namespace="urn:PlatformApiWsdl" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="PlatformApiService">
+        <wsdl:port name="PlatformApiPort" binding="tns:PlatformApiBinding">
+            <soap:address location="http://platform.api.pimpay.ru/v2_6/soap/invoke"/>
+        </wsdl:port>
+    </wsdl:service>
+</definitions>
