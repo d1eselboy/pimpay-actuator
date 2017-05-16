@@ -65,6 +65,7 @@ fabric.properties
 # Ma properties
 cxf.properties
 application.yml
+*.pem
 
 # ios
 .DS_Store

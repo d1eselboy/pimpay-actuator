@@ -1,4 +1,4 @@
-package ru.pimpay.platform.unit;
+package ru.pimpay.platform.unit.server;
 
 import ru.pimpay.platform.client.*;
 

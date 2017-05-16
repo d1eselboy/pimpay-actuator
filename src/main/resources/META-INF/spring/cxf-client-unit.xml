@@ -7,17 +7,16 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
-    <!-- allows for ${} replacement in a Spring XML configuration from a 
-        .properties file on the classpath -->
-    <context:property-placeholder location="classpath:cxf.properties"/>
+    <context:property-placeholder location="classpath:application.properties"/>
 
     <!-- client implementation that will use the bean to call the  service -->
     <bean id="acceptClientImplBean" class="ru.pimpay.platform.service.AcceptClientImpl"/>
+    <bean id="signProvider" class="ru.pimpay.platform.sign.SignProvider"/>
 
     <!-- CXF client for the service -->
     <jaxws:client id="acceptClientBean"
                   serviceClass="ru.pimpay.platform.client.PlatformApiPortType"
-                  address="${pimpay.address}">
+                  address="http://localhost:9091/cnf/services/pimpay">
     </jaxws:client>
 
 </beans>

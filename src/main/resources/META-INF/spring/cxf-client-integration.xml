@@ -2,14 +2,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cxf="http://cxf.apache.org/core"
        xsi:schemaLocation="
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 
-    <!-- allows for ${} replacement in a Spring XML configuration from a 
-        .properties file on the classpath -->
-    <context:property-placeholder location="classpath:cxf.properties"/>
+    <context:property-placeholder location="classpath:application.properties"/>
 
     <!-- client implementation that will use the bean to call the  service -->
     <bean id="acceptClientImplBean" class="ru.pimpay.platform.service.AcceptClientImpl"/>
@@ -17,7 +17,25 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
     <!-- CXF client for the service -->
     <jaxws:client id="acceptClientBean"
                   serviceClass="ru.pimpay.platform.client.PlatformApiPortType"
-                  address="http://platform.api.pimpay.ru/v2_6/soap/invoke">
+                  address="${pimpay.address}">
     </jaxws:client>
+
+
+    <bean id="signHeaderInterceptor" class="ru.pimpay.platform.interceptors.SignHeaderInterceptor"/>
+    <bean id="logOutbound" class="org.apache.cxf.interceptor.LoggingOutInterceptor"/>
+    <bean id="headerInterceptor" class="ru.pimpay.platform.interceptors.HeaderInterceptor"/>
+
+    <cxf:bus>
+        <cxf:outInterceptors>
+            <ref bean="signHeaderInterceptor"/>
+            <ref bean="logOutbound"/>
+            <ref bean="headerInterceptor"/>
+        </cxf:outInterceptors>
+    </cxf:bus>
+
+
+    <bean class="ru.pimpay.platform.sign.SignProvider">
+        <property name="url" value="${pimpay.address}"/>
+    </bean>
 
 </beans>

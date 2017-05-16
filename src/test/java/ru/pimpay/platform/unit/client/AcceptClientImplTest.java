@@ -1,4 +1,4 @@
-package ru.pimpay.platform.unit;
+package ru.pimpay.platform.unit.client;
 
 import org.apache.cxf.jaxws.JaxWsServerFactoryBean;
 import org.junit.BeforeClass;
@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.pimpay.platform.client.AcceptClientParams;
 import ru.pimpay.platform.service.*;
+import ru.pimpay.platform.unit.server.AcceptServerImplMock;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,7 +17,7 @@ import static org.junit.Assert.assertEquals;
  * Created by ermolaev on 23/04/17.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/META-INF/spring/cxf-client.xml" })
+@ContextConfiguration(locations = { "classpath:/META-INF/spring/cxf-client-unit.xml" })
 public class AcceptClientImplTest {
 
     private static String ENDPOINT_ADDRESS = "http://localhost:9091/cnf/services/pimpay";
@@ -26,14 +27,9 @@ public class AcceptClientImplTest {
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        /* create a server endpoint for the Accept Client service */
-        // create a JaxWsServerFactoryBean
         JaxWsServerFactoryBean jaxWsServerFactoryBean = new JaxWsServerFactoryBean();
-        // set the mock implementation of the Accept Client service
         jaxWsServerFactoryBean.setServiceBean(new AcceptServerImplMock());
-        // set the address at which the Accept Client endpoint will be exposed
         jaxWsServerFactoryBean.setAddress(ENDPOINT_ADDRESS);
-        // create the server endpoint
         jaxWsServerFactoryBean.create();
     }
 
