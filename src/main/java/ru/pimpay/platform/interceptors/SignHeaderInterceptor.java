@@ -36,21 +36,6 @@ public class SignHeaderInterceptor extends AbstractPhaseInterceptor<Message> {
 
         if (isOutbound) {
 
-            Method method = message.getExchange().get(Method.class);
-
-            if (null != method) {
-
-                Map<String, List<String>> reqHeaders = CastUtils.cast((Map<?, ?>) message.get(Message.PROTOCOL_HEADERS));
-
-                if (reqHeaders == null) {
-                    reqHeaders = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-                }
-
-                if (reqHeaders.size() == 0) {
-                    message.put(Message.PROTOCOL_HEADERS, reqHeaders);
-                }
-            }
-
             OutputStream os = message.getContent(OutputStream.class);
 
             CachedStream cs = new CachedStream();
