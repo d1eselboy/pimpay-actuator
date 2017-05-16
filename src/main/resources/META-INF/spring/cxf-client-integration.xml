@@ -23,13 +23,11 @@ http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 
     <bean id="signHeaderInterceptor" class="ru.pimpay.platform.interceptors.SignHeaderInterceptor"/>
     <bean id="logOutbound" class="org.apache.cxf.interceptor.LoggingOutInterceptor"/>
-    <bean id="headerInterceptor" class="ru.pimpay.platform.interceptors.HeaderInterceptor"/>
 
     <cxf:bus>
         <cxf:outInterceptors>
             <ref bean="signHeaderInterceptor"/>
             <ref bean="logOutbound"/>
-            <ref bean="headerInterceptor"/>
         </cxf:outInterceptors>
     </cxf:bus>
 

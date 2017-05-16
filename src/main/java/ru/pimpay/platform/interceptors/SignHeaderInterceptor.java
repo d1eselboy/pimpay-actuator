@@ -24,7 +24,7 @@ public class SignHeaderInterceptor extends AbstractPhaseInterceptor<Message> {
     private SignProvider signProvider;
 
     public SignHeaderInterceptor() {
-        super(Phase.PREPARE_SEND);
+        super(Phase.PRE_STREAM);
         addBefore(SoapPreProtocolOutInterceptor.class.getName());
     }
 
@@ -35,6 +35,22 @@ public class SignHeaderInterceptor extends AbstractPhaseInterceptor<Message> {
             || message == message.getExchange().getOutFaultMessage();
 
         if (isOutbound) {
+
+            Method method = message.getExchange().get(Method.class);
+
+            if (null != method) {
+
+                Map<String, List<String>> reqHeaders = CastUtils.cast((Map<?, ?>) message.get(Message.PROTOCOL_HEADERS));
+
+                if (reqHeaders == null) {
+                    reqHeaders = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+                }
+
+                if (reqHeaders.size() == 0) {
+                    message.put(Message.PROTOCOL_HEADERS, reqHeaders);
+                }
+            }
+
             OutputStream os = message.getContent(OutputStream.class);
 
             CachedStream cs = new CachedStream();
@@ -51,6 +67,10 @@ public class SignHeaderInterceptor extends AbstractPhaseInterceptor<Message> {
                 csnew.flush();
                 IOUtils.closeQuietly(csnew);
 
+                Map<String, List<String>> reqHeaders = CastUtils.cast((Map<?, ?>) message.get(Message.PROTOCOL_HEADERS));
+                String signedData = signProvider.signData(currentEnvelopeMessage);
+                reqHeaders.put("X-Request-Signature", Collections.singletonList(signedData));
+
                 InputStream replaceInStream = IOUtils.toInputStream(currentEnvelopeMessage, "UTF-8");
 
                 IOUtils.copy(replaceInStream, os);
@@ -63,26 +83,6 @@ public class SignHeaderInterceptor extends AbstractPhaseInterceptor<Message> {
 
             } catch (IOException ioe) {
                 throw new RuntimeException(ioe);
-            }
-
-            Method method = message.getExchange().get(Method.class);
-
-            if (null != method) {
-
-                Map<String, List<String>> reqHeaders = CastUtils.cast((Map<?, ?>) message.get(Message.PROTOCOL_HEADERS));
-
-                if (reqHeaders == null) {
-                    reqHeaders = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-                }
-
-                if (reqHeaders.size() == 0) {
-                    message.put(Message.PROTOCOL_HEADERS, reqHeaders);
-                }
-
-                String signedData = signProvider.signData(currentEnvelopeMessage);
-                message.getExchange().put("SIGN", signedData);
-                reqHeaders.put("Test-header2", Collections.singletonList("header2"));
-                //reqHeaders.put("X-Request-Signature", Collections.singletonList(signedData));
             }
         }
     }
