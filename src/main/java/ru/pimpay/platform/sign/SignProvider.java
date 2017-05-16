@@ -40,7 +40,6 @@ public class SignProvider {
         try {
             File privateKeyFile = new File(SignProvider.class.getClassLoader().getResource("key.pem").getFile());
 
-            // Using bcpkix-jdk14-1.48
             PEMParser pemParser = new PEMParser(new FileReader(privateKeyFile));
             Object object = pemParser.readObject();
             JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
@@ -63,7 +62,6 @@ public class SignProvider {
 
             instance = Signature.getInstance("SHA512withRSA", "BC");
             instance.initSign(privateKeyCRTDev);
-
 
         } catch (Exception e) {
             e.printStackTrace();
