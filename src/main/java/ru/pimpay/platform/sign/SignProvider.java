@@ -61,7 +61,7 @@ public class SignProvider {
             RSAPrivateCrtKeySpec privateCrtKeySpec = rsaFactory.getKeySpec(kp.getPrivate(), RSAPrivateCrtKeySpec.class);
             RSAPrivateCrtKey privateKeyCRTDev = (RSAPrivateCrtKey) rsaFactory.generatePrivate(privateCrtKeySpec);
 
-            instance = Signature.getInstance("SHA1withRSA", "BC");
+            instance = Signature.getInstance("SHA512withRSA", "BC");
             instance.initSign(privateKeyCRTDev);
 
 
