@@ -12,23 +12,32 @@ http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
     <context:property-placeholder location="classpath:application.properties"/>
 
     <!-- client implementation that will use the bean to call the  service -->
-    <bean id="acceptClientImplBean" class="ru.pimpay.platform.service.AcceptClientImpl"/>
+    <bean id="serviceImplBean" class="ru.pimpay.platform.service.APIImpl"/>
 
     <!-- CXF client for the service -->
-    <jaxws:client id="acceptClientBean"
+    <jaxws:client id="service"
                   serviceClass="ru.pimpay.platform.client.PlatformApiPortType"
                   address="${pimpay.address}">
     </jaxws:client>
 
-
     <bean id="signHeaderInterceptor" class="ru.pimpay.platform.interceptors.SignHeaderInterceptor"/>
     <bean id="logOutbound" class="org.apache.cxf.interceptor.LoggingOutInterceptor"/>
+    <bean id="logInbound" class="org.apache.cxf.interceptor.LoggingInInterceptor"/>
 
     <cxf:bus>
         <cxf:outInterceptors>
             <ref bean="signHeaderInterceptor"/>
             <ref bean="logOutbound"/>
         </cxf:outInterceptors>
+        <cxf:inInterceptors>
+            <ref bean="logInbound"/>
+        </cxf:inInterceptors>
+        <cxf:inFaultInterceptors>
+            <ref bean="logInbound"/>
+        </cxf:inFaultInterceptors>
+        <cxf:outFaultInterceptors>
+            <ref bean="logOutbound"/>
+        </cxf:outFaultInterceptors>
     </cxf:bus>
 
 

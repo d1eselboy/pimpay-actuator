@@ -23,7 +23,7 @@ public class AcceptClientImplTest {
     private static String ENDPOINT_ADDRESS = "http://localhost:9091/cnf/services/pimpay";
 
     @Autowired
-    private AcceptClientImpl acceptClientBean;
+    private APIImpl acceptClientBean;
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {

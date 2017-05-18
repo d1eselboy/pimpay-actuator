@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class UpsertResultItems {
 
-    @XmlElement(name = "UpsertResultItem")
+    @XmlElement(name = "item")
     protected List<UpsertResultItem> upsertResultItem;
 
     /**
