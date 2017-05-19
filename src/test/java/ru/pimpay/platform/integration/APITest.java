@@ -13,6 +13,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import java.math.BigInteger;
 import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertEquals;
@@ -72,10 +73,12 @@ public class APITest {
     @Test
     public void testUpsertOrders() {
         Orders orders = new Orders();
+
         Order order = new Order();
         order.setTin(TIN);
         order.setId(ORDER_ID);
         order.setShopExternalId(SHOP_EXTERNAL_ID);
+
         OrderBase orderBase = new OrderBase();
         OrderParams orderParams = new OrderParams();
         orderParams.setCurrency(CurrencyType.RUB);
@@ -87,6 +90,7 @@ public class APITest {
         orderParams.setUniformPimpayDeliveryStatus(UniformPimpayDeliveryStatusType.INTRANSIT);
         orderParams.setCustomDeliveryStatus("в_пути");
         orderParams.setDeliveryServiceDeliveryStatus("13 (В пути)");
+
         DeliveryStatusHistoryItems history = new DeliveryStatusHistoryItems();
         DeliveryStatusHistoryItem item = new DeliveryStatusHistoryItem();
         item.setDeliveryServiceDeliveryStatus("113 (В пути)");
@@ -94,10 +98,49 @@ public class APITest {
         item.setUniformPimpayDeliveryStatus(UniformPimpayDeliveryStatusType.INTRANSIT);
         item.setCustomDeliveryStatus("в_пути");
         history.getDeliveryStatusHistoryItem().add(item);
+
         orderParams.setHistory(history);
         orderBase.setParams(orderParams);
         order.setBase(orderBase);
+
+        Address address = new Address();
+        address.setCity("Владимир");
+        address.setFull("600035, Россия, Владимирская область, г. Владимир, ул. Мира, д. 7, кв. 77");
+        address.setZipcode("600035");
+        order.setDestinationAddress(address);
+
         order.setCreatedAt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
+
+        Recipient recipient = new Recipient();
+        recipient.setFio("Иванов Иван Иванович");
+        recipient.setPhone("+79999999999");
+        recipient.setEmail("user@example.com");
+        order.setRecipient(recipient);
+
+        F103 f103 = new F103();
+        f103.setDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
+        f103.setNumber(new BigInteger("158"));
+        order.setF103(f103);
+
+        order.setMoneyRecipient(MoneyRecipientType.DELIVERY_SERVICE);
+
+        Claim claim = new Claim();
+        claim.setTin(TIN);
+        claim.setPaymentDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
+        claim.setPaymentSum(3250.20f);
+        claim.setTermType(ClaimTermType.FED);
+        order.setClaim(claim);
+
+        OrderItems orderItems = new OrderItems();
+        OrderItem orderItem = new OrderItem();
+        orderItem.setName("Подушка надувная");
+        orderItem.setValue(1200.50f);
+        orderItem.setCount(new BigInteger("2"));
+        orderItem.setWeight(0.1f);
+        orderItem.setCategory("дорожные аксессуары");
+        orderItems.getOrderItem().add(orderItem);
+        order.setItems(orderItems);
+
         orders.getOrder().add(order);
         UpsertResultResponse upsertResultResponse = service.upsertOrders(TOKEN, orders);
 

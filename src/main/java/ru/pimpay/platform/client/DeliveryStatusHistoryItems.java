@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class DeliveryStatusHistoryItems {
 
-    @XmlElement(name = "DeliveryStatusHistoryItem")
+    @XmlElement(name = "item")
     protected List<DeliveryStatusHistoryItem> deliveryStatusHistoryItem;
 
     /**

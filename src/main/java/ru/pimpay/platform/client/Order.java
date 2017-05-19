@@ -54,12 +54,16 @@ public class Order {
     @XmlElement(required = true)
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar createdAt;
+    @XmlElement(name = "item")
     protected Address destinationAddress;
+    @XmlElement(name = "item")
     protected Recipient recipient;
     protected OrderItems items;
+    @XmlElement(name = "item")
     protected F103 f103;
     @XmlSchemaType(name = "string")
     protected MoneyRecipientType moneyRecipient;
+    @XmlElement(name = "item")
     protected Claim claim;
 
     /**

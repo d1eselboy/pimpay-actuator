@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class OrderItems {
 
-    @XmlElement(name = "OrderItem")
+    @XmlElement(name = "item")
     protected List<OrderItem> orderItem;
 
     /**
