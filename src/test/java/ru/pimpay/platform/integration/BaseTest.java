@@ -1,29 +1,29 @@
 package ru.pimpay.platform.integration;
 
-import lombok.SneakyThrows;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import lombok.extern.slf4j.Slf4j;
 import ru.pimpay.platform.client.*;
-import ru.pimpay.platform.service.APIImpl;
 
+import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.ws.soap.SOAPFaultException;
-
 import java.math.BigInteger;
 import java.util.GregorianCalendar;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by ermolaev on 23/04/17.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/META-INF/spring/cxf-client-integration.xml"})
-public class APITest {
+@Slf4j
+public class BaseTest {
+
+    public static XMLGregorianCalendar date = null;
+
+    static {
+        try {
+            date = DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar());
+        } catch (DatatypeConfigurationException e) {
+            log.error("Static test objects initialization failed. Problem with date " + e.getMessage());
+        }
+    }
 
     public static final String TOKEN = "48115414881b3f9c91f2de2d296752c9d2f570d3bf703bd879c73a7343a140bf50d6e640";
     public static final String TIN = "7777777777";
@@ -34,45 +34,36 @@ public class APITest {
     public static final String INCOMPLETE_ERROR = "Не указана ни одна из обазательных частей основной информации по заказу.";
     public static final String ORDER_ID = "34568942";
     public static final String SHOP_EXTERNAL_ID = "ПТ-2467";
+    public static final float COST = 1235.60f;
+    public static final String IN_TRANSIT_113 = "113 (В пути)";
+    public static final String IN_TRANSIT = "в_пути";
 
-    @Autowired
-    private APIImpl service;
+    public static AcceptClientParams client;
+    public static Orders simpleOrders;
+    public static Orders upsertOrders;
+    public static OrdersStates ordersStates;
+    public static PaymentOrder paymentOrder;
+    public static VerificationRows verificationRows;
 
-    @Test(expected = SOAPFaultException.class)
-    //Выполнить тест для регистрации пользователя
-    public void testAcceptClient() {
-        AcceptClientParams client = new AcceptClientParams();
+
+    static {
+        client = new AcceptClientParams();
         client.setLegalEntityName(ENTITY_NAME);
         client.setTin(TIN);
         client.setShopName(SHOP_NAME);
         client.setEmail(EMAIL);
         client.setMobile(MOBILE);
-
-        service.acceptClient(TOKEN, client);
     }
 
-    @Test
-    public void testGetClient() {
-        ClientInfo clientInfo = service.getClient(TOKEN, TIN);
-
-        assertEquals(TIN, clientInfo.getTin());
+    static {
+        simpleOrders = new Orders();
+        Order simpleOrder = new Order();
+        simpleOrder.setTin(TIN);
+        simpleOrders.getOrder().add(simpleOrder);
     }
 
-    @Test
-    public void testUpsertOrdersIncompleteError() {
-        Orders orders = new Orders();
-        Order order = new Order();
-        order.setTin(TIN);
-        orders.getOrder().add(order);
-        UpsertResultResponse upsertResultResponse = service.upsertOrders(TOKEN, orders);
-
-        assertEquals(upsertResultResponse.getOrders().getUpsertResultItem().get(0).getErrorMessage(), INCOMPLETE_ERROR);
-    }
-
-    @SneakyThrows
-    @Test
-    public void testUpsertOrders() {
-        Orders orders = new Orders();
+    static {
+        upsertOrders = new Orders();
 
         Order order = new Order();
         order.setTin(TIN);
@@ -82,21 +73,21 @@ public class APITest {
         OrderBase orderBase = new OrderBase();
         OrderParams orderParams = new OrderParams();
         orderParams.setCurrency(CurrencyType.RUB);
-        orderParams.setPaymentFromRecipient(1235.60f);
-        orderParams.setDeclaredOrderCost(1235.60f);
+        orderParams.setPaymentFromRecipient(COST);
+        orderParams.setDeclaredOrderCost(COST);
         orderParams.setEstimatedDeliveryCost(200.35f);
         orderParams.setDeliveryService(DeliveryServiceType.B_2_CPL);
         orderParams.setDeliveryServiceExternalId("8190s7");
         orderParams.setUniformPimpayDeliveryStatus(UniformPimpayDeliveryStatusType.INTRANSIT);
-        orderParams.setCustomDeliveryStatus("в_пути");
-        orderParams.setDeliveryServiceDeliveryStatus("13 (В пути)");
+        orderParams.setCustomDeliveryStatus(IN_TRANSIT);
+        orderParams.setDeliveryServiceDeliveryStatus(IN_TRANSIT_113);
 
         DeliveryStatusHistoryItems history = new DeliveryStatusHistoryItems();
         DeliveryStatusHistoryItem item = new DeliveryStatusHistoryItem();
-        item.setDeliveryServiceDeliveryStatus("113 (В пути)");
-        item.setTime(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
+        item.setDeliveryServiceDeliveryStatus(IN_TRANSIT_113);
+        item.setTime(date);
         item.setUniformPimpayDeliveryStatus(UniformPimpayDeliveryStatusType.INTRANSIT);
-        item.setCustomDeliveryStatus("в_пути");
+        item.setCustomDeliveryStatus(IN_TRANSIT);
         history.getDeliveryStatusHistoryItem().add(item);
 
         orderParams.setHistory(history);
@@ -109,16 +100,16 @@ public class APITest {
         address.setZipcode("600035");
         order.setDestinationAddress(address);
 
-        order.setCreatedAt(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
+        order.setCreatedAt(date);
 
         Recipient recipient = new Recipient();
         recipient.setFio("Иванов Иван Иванович");
-        recipient.setPhone("+79999999999");
-        recipient.setEmail("user@example.com");
+        recipient.setPhone(MOBILE);
+        recipient.setEmail(EMAIL);
         order.setRecipient(recipient);
 
         F103 f103 = new F103();
-        f103.setDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
+        f103.setDate(date);
         f103.setNumber(new BigInteger("158"));
         order.setF103(f103);
 
@@ -126,7 +117,7 @@ public class APITest {
 
         Claim claim = new Claim();
         claim.setTin(TIN);
-        claim.setPaymentDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(new GregorianCalendar()));
+        claim.setPaymentDate(date);
         claim.setPaymentSum(3250.20f);
         claim.setTermType(ClaimTermType.FED);
         order.setClaim(claim);
@@ -141,9 +132,43 @@ public class APITest {
         orderItems.getOrderItem().add(orderItem);
         order.setItems(orderItems);
 
-        orders.getOrder().add(order);
-        UpsertResultResponse upsertResultResponse = service.upsertOrders(TOKEN, orders);
+        upsertOrders.getOrder().add(order);
 
-        assertEquals(upsertResultResponse.getOrders().getUpsertResultItem().get(0).getErrorMessage(), INCOMPLETE_ERROR);
+    }
+
+    static {
+        ordersStates = new OrdersStates();
+        OrderState orderState = new OrderState();
+        orderState.setCost(COST);
+        orderState.setId(ORDER_ID);
+        orderState.setUniformPimpayDeliveryStatus(UniformPimpayDeliveryStatusType.INTRANSIT);
+        orderState.setCustomDeliveryStatus(IN_TRANSIT);
+        orderState.setDeliveryServiceDeliveryStatus(IN_TRANSIT_113);
+        orderState.setTime(date);
+        ordersStates.getOrderState().add(orderState);
+
+    }
+
+    static {
+        paymentOrder = new PaymentOrder();
+        paymentOrder.setDate(date);
+        paymentOrder.setNum(new BigInteger("703"));
+        paymentOrder.setSum(COST);
+    }
+
+    static {
+        VerificationRow verificationRow = new VerificationRow();
+        verificationRow.setOid("ORD-12356");
+        verificationRow.setPtp(1500.25f);
+        verificationRow.setPfr(1705.25f);
+        verificationRow.setDc(200f);
+        verificationRow.setCs(5.00f);
+        verificationRow.setIns(1.00f);
+        CustomTransactions сustomTransactions = new CustomTransactions();
+        CustomTransaction customTransaction = new CustomTransaction();
+        customTransaction.setCmt(//TODO);
+        сustomTransactions.getCustomTransaction().add(customTransaction)
+        verificationRow.setTxs(сustomTransactions);
+        verificationRows.getVerificationRow().add(verificationRow);
     }
 }

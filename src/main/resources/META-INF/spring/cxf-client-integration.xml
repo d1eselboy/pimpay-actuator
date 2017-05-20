@@ -12,7 +12,7 @@ http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
     <context:property-placeholder location="classpath:application.properties"/>
 
     <!-- client implementation that will use the bean to call the  service -->
-    <bean id="serviceImplBean" class="ru.pimpay.platform.service.APIImpl"/>
+    <bean id="serviceImplBean" class="ru.pimpay.platform.service.ClientImpl"/>
 
     <!-- CXF client for the service -->
     <jaxws:client id="service"
@@ -41,8 +41,6 @@ http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
     </cxf:bus>
 
 
-    <bean class="ru.pimpay.platform.sign.SignProvider">
-        <property name="url" value="${pimpay.address}"/>
-    </bean>
+    <bean class="ru.pimpay.platform.sign.SignProvider"/>
 
 </beans>

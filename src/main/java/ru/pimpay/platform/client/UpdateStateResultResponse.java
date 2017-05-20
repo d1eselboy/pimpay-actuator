@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class UpdateStateResultResponse {
 
-    @XmlElement(required = true)
+    @XmlElement(required = true, nillable = true)
     protected BigInteger count;
     @XmlElement(required = true)
     protected UpdateStateResultItems orders;

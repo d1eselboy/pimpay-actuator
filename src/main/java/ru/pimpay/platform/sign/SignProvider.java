@@ -28,7 +28,6 @@ public class SignProvider {
 
     private String privateKeyFilePath;
     private String publicKeyFilePath;
-    private String url;
 
     private static Signature instance;
 

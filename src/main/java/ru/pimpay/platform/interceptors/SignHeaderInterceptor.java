@@ -1,11 +1,5 @@
 package ru.pimpay.platform.interceptors;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.util.*;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.binding.soap.interceptor.SoapPreProtocolOutInterceptor;
@@ -16,6 +10,13 @@ import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.phase.Phase;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.pimpay.platform.sign.SignProvider;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class SignHeaderInterceptor extends AbstractPhaseInterceptor<Message> {
@@ -30,7 +31,7 @@ public class SignHeaderInterceptor extends AbstractPhaseInterceptor<Message> {
 
 
     public void handleMessage(Message message) {
-        boolean isOutbound = false;
+        boolean isOutbound;
         isOutbound = message == message.getExchange().getOutMessage()
             || message == message.getExchange().getOutFaultMessage();
 

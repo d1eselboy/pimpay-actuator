@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class UpdateStateResultItems {
 
-    @XmlElement(name = "UpdateStateResultItem")
+    @XmlElement(name = "item")
     protected List<UpdateStateResultItem> updateStateResultItem;
 
     /**
