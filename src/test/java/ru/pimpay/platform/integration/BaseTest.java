@@ -44,7 +44,7 @@ public class BaseTest {
     public static OrdersStates ordersStates;
     public static PaymentOrder paymentOrder;
     public static VerificationRows verificationRows;
-
+    public static PostIds postIds;
 
     static {
         client = new AcceptClientParams();
@@ -157,6 +157,7 @@ public class BaseTest {
     }
 
     static {
+        verificationRows = new VerificationRows();
         VerificationRow verificationRow = new VerificationRow();
         verificationRow.setOid("ORD-12356");
         verificationRow.setPtp(1500.25f);
@@ -166,9 +167,16 @@ public class BaseTest {
         verificationRow.setIns(1.00f);
         CustomTransactions сustomTransactions = new CustomTransactions();
         CustomTransaction customTransaction = new CustomTransaction();
-        customTransaction.setCmt(//TODO);
-        сustomTransactions.getCustomTransaction().add(customTransaction)
+        customTransaction.setVal(15.50f);
+        customTransaction.setCmt("СМС оповещение");
+        сustomTransactions.getCustomTransaction().add(customTransaction);
         verificationRow.setTxs(сustomTransactions);
         verificationRows.getVerificationRow().add(verificationRow);
+    }
+
+    static {
+        postIds = new PostIds();
+        String postId = "10100081809664";
+        postIds.getRussianPostIdType().add(postId);
     }
 }

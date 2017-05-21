@@ -37,11 +37,10 @@ dependencies {
     testCompile 'org.springframework:spring-test:4.3.8.RELEASE'
 }
 
-wsdl2java {
-    generatedWsdlDir = file("src/main/java/")  // target directory for generated source coude
-    wsdlDir = file("src/main/resources/wsdl") // define to support incremental build
-    wsdlsToGenerate = [   //  2d-array of wsdls and cxf-parameters
-                          ['-p', 'ru.pimpay.platform.client', 'src/main/resources/wsdl/PlatformApiWsdl.wsdl']
-    ]
-    locale = Locale.US
-}
+//wsdl2java {
+//    generatedWsdlDir = file("src/main/java/")
+//    wsdlDir = file("src/main/resources/wsdl")
+//    wsdlsToGenerate = [['-p', 'ru.pimpay.platform.client', 'src/main/resources/wsdl/PlatformApiWsdl.wsdl']]
+//    locale = Locale.US
+//}
+

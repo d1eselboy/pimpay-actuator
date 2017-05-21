@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class VerificationErrors {
 
-    @XmlElement(name = "VerificationError")
+    @XmlElement(name = "item")
     protected List<VerificationError> verificationError;
 
     /**

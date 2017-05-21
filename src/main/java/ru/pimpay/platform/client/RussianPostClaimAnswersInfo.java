@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class RussianPostClaimAnswersInfo {
 
-    @XmlElement(name = "RussianPostClaimAnswerInfo")
+    @XmlElement(name = "item")
     protected List<RussianPostClaimAnswerInfo> russianPostClaimAnswerInfo;
 
     /**
