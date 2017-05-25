@@ -14,12 +14,7 @@ http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
     <!-- client implementation that will use the bean to call the  service -->
     <bean id="serviceImplBean" class="ru.pimpay.platform.service.ClientImpl"/>
     <!-- sign provider -->
-    <bean class="ru.pimpay.platform.sign.SignProvider" init-method="init">
-        <property name="privateKeyFileName" value="${pimpay.private.key.file.name}" />
-        <property name="privateKeyPass" value="${pimpay.private.key.pass}" />
-        <property name="crypto" value="${pimpay.private.key.crypto}" />
-        <property name="signatureType" value="${pimpay.private.key.signature.type}" />
-    </bean>
+    <bean class="ru.pimpay.platform.sign.SignProvider" init-method="init"/>
 
     <!-- CXF client for the service -->
     <jaxws:client id="service"

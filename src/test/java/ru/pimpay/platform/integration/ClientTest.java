@@ -1,9 +1,9 @@
 package ru.pimpay.platform.integration;
 
-import lombok.SneakyThrows;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.pimpay.platform.client.*;
@@ -21,66 +21,69 @@ import static org.junit.Assert.assertTrue;
 @ContextConfiguration(locations = {"classpath:/META-INF/spring/cxf-client.xml"})
 public class ClientTest extends BaseTest {
 
+    @Value("${pimpay.token}")
+    public String token;
+
     @Autowired
     private ClientImpl service;
 
     @Test
     public void testHeaderSignature() {
-        assertTrue(service.testHeaderSignature(TOKEN, ORDER_ID));
+        assertTrue(service.testHeaderSignature(token, ORDER_ID));
     }
 
     @Test(expected = SOAPFaultException.class)
     //Выполнить тест после регистрации пользователя
     public void testAcceptClient() {
-        service.acceptClient(TOKEN, client);
+        service.acceptClient(token, client);
     }
 
     @Test
     public void testGetClient() {
-        assertEquals(TIN, service.getClient(TOKEN, TIN).getTin());
+        assertEquals(TIN, service.getClient(token, TIN).getTin());
     }
 
     @Test
     public void testUpsertOrdersIncompleteError() {
-        UpsertResultResponse upsertResultResponse = service.upsertOrders(TOKEN, simpleOrders);
+        UpsertResultResponse upsertResultResponse = service.upsertOrders(token, simpleOrders);
         assertEquals(INCOMPLETE_ERROR, upsertResultResponse.getOrders().getUpsertResultItem().get(0).getErrorMessage());
     }
 
     @Test
     public void testUpsertOrders() {
-        UpsertResultResponse upsertResultResponse = service.upsertOrders(TOKEN, upsertOrders);
+        UpsertResultResponse upsertResultResponse = service.upsertOrders(token, upsertOrders);
         assertEquals(UpsertResultStatus.OK, upsertResultResponse.getOrders().getUpsertResultItem().get(0).getStatus());
     }
 
     @Test
     public void testUpsertHistoricalOrders() {
-        UpsertResultResponse upsertResultResponse = service.upsertHistoricalOrders(TOKEN, upsertOrders);
+        UpsertResultResponse upsertResultResponse = service.upsertHistoricalOrders(token, upsertOrders);
         assertEquals(UpsertResultStatus.OK, upsertResultResponse.getOrders().getUpsertResultItem().get(0).getStatus());
     }
 
     @Test
     public void testUpdateStateForOrders() {
-        UpdateStateResultResponse upsertResultResponse = service.updateStateForOrders(TOKEN, ordersStates);
+        UpdateStateResultResponse upsertResultResponse = service.updateStateForOrders(token, ordersStates);
         assertEquals(UpdateStateResultStatus.OK, upsertResultResponse.getOrders().getUpdateStateResultItem().get(0).getStatus());
     }
 
     @Test
     public void testSendVerification() {
-        assertTrue(service.sendVerification(TOKEN, TIN, ORDER_ID, paymentOrder, verificationRows));
+        assertTrue(service.sendVerification(token, TIN, ORDER_ID, paymentOrder, verificationRows));
     }
 
     @Test
     public void testGetVerificationStatus() {
-        assertEquals(VerificationStatusType.PENDING, service.getVerificationStatus(TOKEN, ORDER_ID).getStatus());
+        assertEquals(VerificationStatusType.PENDING, service.getVerificationStatus(token, ORDER_ID).getStatus());
     }
 
     @Test
     public void testGetRussianPostPayments() {
-        assertEquals(TIN, service.getRussianPostPayments(TOKEN, TIN, postIds).getTin());
+        assertEquals(TIN, service.getRussianPostPayments(token, TIN, postIds).getTin());
     }
 
     @Test
     public void testGetRussianPostClaimAnswers() {
-        assertEquals(TIN, service.getRussianPostClaimAnswers(TOKEN, TIN, postIds).getTin());
+        assertEquals(TIN, service.getRussianPostClaimAnswers(token, TIN, postIds).getTin());
     }
 }
