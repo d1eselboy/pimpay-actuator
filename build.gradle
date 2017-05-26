@@ -13,6 +13,7 @@ buildscript {
 }
 apply plugin: 'no.nils.wsdl2java'
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.7
 
@@ -35,6 +36,23 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.springframework:spring-test:4.3.8.RELEASE'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = group
+        }
+    }
+}
+publishing {
+    repositories {
+        maven {
+            // change to point to your repo, e.g. http://my.org/repo
+            url "$buildDir/repo"
+        }
+    }
 }
 
 //wsdl2java {
