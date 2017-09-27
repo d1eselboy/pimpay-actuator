@@ -22,7 +22,7 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
 
 - Gradle:
 ```
-compile "ru.pimpay.platform:pimpay-actuator:0.0.1"
+compile "ru.pimpay.platform:pimpay-actuator:0.0.2"
 ```
   
 - Maven:
