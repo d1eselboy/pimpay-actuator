@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="tin" type="{urn:PlatformApiWsdl}tinType"/&gt;
  *         &lt;element name="status" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="isMoneyTransferPossible" type="{http://www.w3.org/2001/XMLSchema}boolean"/&gt;
+ *         &lt;element name="isActive" type="{http://www.w3.org/2001/XMLSchema}boolean"/&gt;
  *         &lt;element name="paymentOrderPurpose" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="ordersCount" type="{http://www.w3.org/2001/XMLSchema}integer" minOccurs="0"/&gt;
  *       &lt;/all&gt;
@@ -41,6 +42,7 @@ public class ClientInfo {
     protected String tin;
     protected String status;
     protected boolean isMoneyTransferPossible;
+    protected boolean isActive;
     @XmlElement(required = true)
     protected String paymentOrderPurpose;
     protected BigInteger ordersCount;
@@ -109,6 +111,21 @@ public class ClientInfo {
         this.isMoneyTransferPossible = value;
     }
 
+    /**
+     * Gets the value of the isActive property.
+     *
+     */
+    public boolean isActive() {
+        return isActive;
+    }
+
+    /**
+     * Sets the value of the isActive property.
+     *
+     */
+    public void setActive(boolean active) {
+        isActive = active;
+    }
     /**
      * Gets the value of the paymentOrderPurpose property.
      * 

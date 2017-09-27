@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;attribute name="dc" type="{http://www.w3.org/2001/XMLSchema}float" /&gt;
  *       &lt;attribute name="cs" type="{http://www.w3.org/2001/XMLSchema}float" /&gt;
  *       &lt;attribute name="ins" type="{http://www.w3.org/2001/XMLSchema}float" /&gt;
+ *       &lt;attribute name="tsc" type="{http://www.w3.org/2001/XMLSchema}float" /&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
@@ -51,6 +52,8 @@ public class VerificationRow {
     protected Float cs;
     @XmlAttribute(name = "ins")
     protected Float ins;
+    @XmlAttribute(name = "tsc")
+    protected Float tsc;
 
     /**
      * Gets the value of the txs property.
@@ -211,5 +214,30 @@ public class VerificationRow {
     public void setIns(Float value) {
         this.ins = value;
     }
+
+    /**
+     * Gets the value of the ins property.
+     *
+     * @return
+     *     possible object is
+     *     {@link Float }
+     *
+     */
+    public Float getTsc() {
+        return tsc;
+    }
+
+    /**
+     * Sets the value of the ins property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link Float }
+     *
+     */
+    public void setTsc(Float value) {
+        this.tsc = value;
+    }
+
 
 }

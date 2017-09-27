@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;all&gt;
  *         &lt;element name="legalEntityName" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="tin" type="{urn:PlatformApiWsdl}tinType"/&gt;
+ *         &lt;element name="agreement" type="{urn:PlatformApiWsdl}tinType"/&gt;
  *         &lt;element name="shopName" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="email" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="mobile" type="{urn:PlatformApiWsdl}mobileType"/&gt;
@@ -40,6 +41,7 @@ public class AcceptClientParams {
     protected String legalEntityName;
     @XmlElement(required = true)
     protected String tin;
+    protected String agreement;
     @XmlElement(required = true)
     protected String shopName;
     @XmlElement(required = true)
@@ -93,6 +95,30 @@ public class AcceptClientParams {
      */
     public void setTin(String value) {
         this.tin = value;
+    }
+
+    /**
+     * Gets the value of the agreement property.
+     *
+     * @return
+     *     possible object is
+     *     {@link String }
+     *
+     */
+    public String getAgreement() {
+        return agreement;
+    }
+
+    /**
+     * Sets the value of the agreement property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *
+     */
+    public void setAgreement(String value) {
+        this.agreement = value;
     }
 
     /**

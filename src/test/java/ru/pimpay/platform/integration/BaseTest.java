@@ -37,6 +37,7 @@ public class BaseTest {
     public static final float COST = 1235.60f;
     public static final String IN_TRANSIT_113 = "113 (В пути)";
     public static final String IN_TRANSIT = "в_пути";
+    public static final String AGREEMENT = "№451 от 14.05.2015";
 
     public static AcceptClientParams client;
     public static Orders simpleOrders;
@@ -46,10 +47,12 @@ public class BaseTest {
     public static VerificationRows verificationRows;
     public static PostIds postIds;
 
+
     static {
         client = new AcceptClientParams();
         client.setLegalEntityName(ENTITY_NAME);
         client.setTin(TIN);
+        client.setAgreement(AGREEMENT);
         client.setShopName(SHOP_NAME);
         client.setEmail(EMAIL);
         client.setMobile(MOBILE);
@@ -124,13 +127,29 @@ public class BaseTest {
 
         OrderItems orderItems = new OrderItems();
         OrderItem orderItem = new OrderItem();
+        orderItem.setId(1);
         orderItem.setName("Подушка надувная");
+        orderItem.setSku("1234");
         orderItem.setValue(1200.50f);
+        orderItem.setCost(1200.00f);
         orderItem.setCount(new BigInteger("2"));
         orderItem.setWeight(0.1f);
+        orderItem.setLength(0.1f);
+        orderItem.setWidth(0.1f);
+        orderItem.setHeight(0.1f);
+        orderItem.setVatValue(VatValueType.VAT_0);
         orderItem.setCategory("дорожные аксессуары");
         orderItems.getOrderItem().add(orderItem);
         order.setItems(orderItems);
+
+        order.setDeliveryTimeInDays(BigInteger.valueOf(100));
+
+        OrderReturnInfo orderReturnInfo = new OrderReturnInfo();
+        OrderIds orderIds = new OrderIds();
+        orderIds.getOrderId().add("item");
+        orderReturnInfo.setOriginOrderIds(orderIds);
+        orderReturnInfo.setReturn(true);
+        order.setReturnInfo(orderReturnInfo);
 
         upsertOrders.getOrder().add(order);
 
@@ -165,6 +184,7 @@ public class BaseTest {
         verificationRow.setDc(200f);
         verificationRow.setCs(5.00f);
         verificationRow.setIns(1.00f);
+        verificationRow.setTsc(251.00f);
         CustomTransactions сustomTransactions = new CustomTransactions();
         CustomTransaction customTransaction = new CustomTransaction();
         customTransaction.setVal(15.50f);

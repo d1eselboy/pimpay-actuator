@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigInteger;
 
 
 /**
@@ -30,6 +31,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *         &lt;element name="f103" type="{urn:PlatformApiWsdl}F103" minOccurs="0"/&gt;
  *         &lt;element name="moneyRecipient" type="{urn:PlatformApiWsdl}moneyRecipientType" minOccurs="0"/&gt;
  *         &lt;element name="claim" type="{urn:PlatformApiWsdl}Claim" minOccurs="0"/&gt;
+ *         &lt;element name="deliveryTimeInDays" type="{http://www.w3.org/2001/XMLSchema}integer"/&gt;
+ *         &lt;element name="returnInfo" type="{urn:PlatformApiWsdl}OrderReturnInfo" minOccurs="0"/&gt;
  *       &lt;/all&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -61,6 +64,8 @@ public class Order {
     @XmlSchemaType(name = "string")
     protected MoneyRecipientType moneyRecipient;
     protected Claim claim;
+    protected BigInteger deliveryTimeInDays;
+    protected OrderReturnInfo returnInfo;
 
     /**
      * Gets the value of the id property.
@@ -324,6 +329,22 @@ public class Order {
      */
     public void setClaim(Claim value) {
         this.claim = value;
+    }
+
+    public BigInteger getDeliveryTimeInDays() {
+        return deliveryTimeInDays;
+    }
+
+    public void setDeliveryTimeInDays(BigInteger deliveryTimeInDays) {
+        this.deliveryTimeInDays = deliveryTimeInDays;
+    }
+
+    public OrderReturnInfo getReturnInfo() {
+        return returnInfo;
+    }
+
+    public void setReturnInfo(OrderReturnInfo returnInfo) {
+        this.returnInfo = returnInfo;
     }
 
 }

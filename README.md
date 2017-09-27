@@ -30,7 +30,7 @@ compile "ru.pimpay.platform:pimpay-actuator:0.0.1"
 <dependency>
     <groupId>ru.pimpay.platform</groupId>
     <artifactId>pimpay-actuator</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 
