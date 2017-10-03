@@ -4,6 +4,8 @@ package ru.pimpay.platform.client;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "OrderReturnInfo", propOrder = {
@@ -12,7 +14,7 @@ import javax.xml.bind.annotation.XmlType;
 public class OrderReturnInfo {
 
     protected Boolean isReturn;
-    protected OrderIds originOrderIds;
+    protected List<String> originOrderIds;
 
     public Boolean getReturn() {
         return isReturn;
@@ -22,11 +24,10 @@ public class OrderReturnInfo {
         isReturn = aReturn;
     }
 
-    public OrderIds getOriginOrderIds() {
-        return originOrderIds;
-    }
-
-    public void setOriginOrderIds(OrderIds originOrderIds) {
-        this.originOrderIds = originOrderIds;
+    public List<String> getOriginOrderIds() {
+        if (originOrderIds == null) {
+            originOrderIds = new ArrayList<String>();
+        }
+        return this.originOrderIds;
     }
 }

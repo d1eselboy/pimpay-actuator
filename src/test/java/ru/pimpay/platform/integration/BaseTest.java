@@ -145,9 +145,8 @@ public class BaseTest {
         order.setDeliveryTimeInDays(BigInteger.valueOf(100));
 
         OrderReturnInfo orderReturnInfo = new OrderReturnInfo();
-        OrderIds orderIds = new OrderIds();
-        orderIds.getOrderId().add("item");
-        orderReturnInfo.setOriginOrderIds(orderIds);
+        orderReturnInfo.getOriginOrderIds().add("item1");
+        orderReturnInfo.getOriginOrderIds().add("item2");
         orderReturnInfo.setReturn(true);
         order.setReturnInfo(orderReturnInfo);
 
