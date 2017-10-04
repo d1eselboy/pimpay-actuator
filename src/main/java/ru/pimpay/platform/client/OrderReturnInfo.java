@@ -14,7 +14,7 @@ import java.util.List;
 public class OrderReturnInfo {
 
     protected Boolean isReturn;
-    protected List<String> originOrderIds;
+    protected List<String> originOrderId;
 
     public Boolean getReturn() {
         return isReturn;
@@ -24,10 +24,10 @@ public class OrderReturnInfo {
         isReturn = aReturn;
     }
 
-    public List<String> getOriginOrderIds() {
-        if (originOrderIds == null) {
-            originOrderIds = new ArrayList<String>();
+    public List<String> getOriginOrderId() {
+        if (originOrderId == null) {
+            originOrderId = new ArrayList<String>();
         }
-        return this.originOrderIds;
+        return this.originOrderId;
     }
 }
